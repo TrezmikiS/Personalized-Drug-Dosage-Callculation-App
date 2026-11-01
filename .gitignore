@@ -1,12 +1,17 @@
-*.md
+# Environment & Secrets
+.env
+.env.local
 
 # Python
 __pycache__/
 *.py[cod]
+*$py.class
 venv/
-.env
+.venv/
+env/
 
 # Node / React
 node_modules/
 build/
+dist/
 .DS_Store
