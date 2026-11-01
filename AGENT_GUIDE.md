@@ -42,10 +42,10 @@
 | Cockcroft-Gault & Algoritma Fonksiyonları | Hamza Karayiğit | Bilgisayar Mühendisliği | ✅ Tamamlandı | Faz 2 | 
 | Pydantic Şemaları & Validation Logic | Hamza Karayiğit | Bilgisayar Mühendisliği | ✅ Tamamlandı | Faz 2 | 
 | Sanal Hasta Veri Seti (Dummy Patient Data) | Hamza Karayiğit | Eczacılık | ✅ Tamamlandı | Faz 2 | 
-| React UI Form Tasarımları & Tailwind Stil | Ceyhun M. Keklik | Bilgisayar Mühendisliği | ⏳ Beklemede | Faz 3 | 
-| API Entegrasyonu & Dynamic Alert Badges | Ceyhun M. Keklik | Bilgisayar Mühendisliği | ⏳ Beklemede | Faz 3 | 
-| Klinik Uyarı Metinleri & UI Yönergeleri | Ceyhun M. Keklik | Eczacılık | ⏳ Beklemede | Faz 3 | 
-| Klinik Validasyon & Doz Doğrulama Testleri | Ceyhun M. Keklik | Eczacılık | ⏳ Beklemede | Faz 3 | 
+| React UI Form Tasarımları & Tailwind Stil | Ceyhun M. Keklik | Bilgisayar Mühendisliği | ✅ Tamamlandı | Faz 3 | 
+| API Entegrasyonu & Dynamic Alert Badges | Ceyhun M. Keklik | Bilgisayar Mühendisliği | ✅ Tamamlandı | Faz 3 | 
+| Klinik Uyarı Metinleri & UI Yönergeleri | Ceyhun M. Keklik | Eczacılık | ✅ Tamamlandı | Faz 3 | 
+| Klinik Validasyon & Doz Doğrulama Testleri | Ceyhun M. Keklik | Eczacılık | ✅ Tamamlandı | Faz 3 | 
 | Teknik Rapor & Dokümantasyon Hazırlığı | Tüm Ekip | Ortak | ⏳ Beklemede | Faz 4 | 
 
 ## 3. Tech Stack Definition
@@ -273,6 +273,8 @@ Projeyi 4 temel faza ayırdık. Her faz, **Strict 4-Step Pipeline (`/basla` ➔ 
 * **2026-11-01 (Faz 1):** Ceyhun ile Faz 1 başarıyla tamamlandı. PostgreSQL/SQLAlchemy ORM modelleri (`drugs`, `calculation_logs`), FastAPI temel mimarisi, DB health check ve initial seed endpoint'leri oluşturuldu. Klinik referans dokümanı (`docs/clinical_reference.md`) hazırlandı. Testler (%100) doğrulandı.
 
 * **2026-11-01 (Faz 2):** Hamza ile Faz 2 başarıyla tamamlandı. Cockcroft-Gault eşitliği, Devine IBW ve obez hastalar için ABW algoritmaları (`algorithms/renal.py`), dar terapötik aralıklı ilaçlar (Vankomisin, Digoksin, Lityum) için doz ve aralık uyarlama motoru (`algorithms/dosage.py`), Pydantic v2 veri doğrulama şemaları (`schemas/dosage_schema.py`), POST /api/calculate ve GET /api/drugs rotaları ile audit logging sistemi geliştirildi. 16 klinik sanal hasta profili ve uç değer testleri (`backend/tests/test_phase2.py`) dahil 34/34 test (%100) başarıyla doğrulandı.
+
+* **2026-11-01 (Faz 3):** Ceyhun ile Faz 3 başarıyla tamamlandı. React Vite + Tailwind CSS v4 frontend altyapısı kuruldu. PatientForm (6 klinik alan + validasyon), DrugSelector (backend entegrasyonu), AlertBadge (Normal/Sarı/Kırmızı klinik uyarı kartları), ResultCard (CrCl + Doz metrikleri) ve CalculatorPage (responsive 2-kolonlu layout) bileşenleri geliştirildi. Axios API istemcisi ile FastAPI backend tam entegrasyonu sağlandı. Vite build: 80 modül hatasız derlendi.
 
 ## 10. Ajan Komutları Workflow
 
