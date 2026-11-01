@@ -7,6 +7,8 @@ from sqlalchemy import text
 from backend.app.database import engine, Base, get_db
 from backend.app.models.drug import Drug
 from backend.app.models.calculation_log import CalculationLog
+from backend.app.api.drugs import router as drugs_router
+from backend.app.api.calculate import router as calculate_router
 
 
 @asynccontextmanager
@@ -34,6 +36,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include API Routers
+app.include_router(drugs_router)
+app.include_router(calculate_router)
 
 
 @app.get("/")
