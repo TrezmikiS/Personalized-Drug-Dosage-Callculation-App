@@ -2,6 +2,19 @@ import { useState } from 'react'
 import DrugSelector from './DrugSelector'
 import { calculateDose } from '../services/api'
 
+// Moved outside the component to prevent unmounting/remounting on every keystroke
+function FormField({ id, label, error, children }) {
+  return (
+    <div>
+      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
+        {label}
+      </label>
+      {children}
+      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+    </div>
+  )
+}
+
 /**
  * PatientForm — Controlled patient data input form.
  * Props:
@@ -22,20 +35,33 @@ export default function PatientForm({ onResult }) {
 
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }))
-    setErrors((prev) => ({ ...prev, [field]: undefined }))
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: undefined }))
+    }
   }
 
   const validate = () => {
     const errs = {}
-    if (!form.age || form.age < 18 || form.age > 120)
+    const ageNum = Number(form.age)
+    const weightNum = Number(form.weight_kg)
+    const creatNum = Number(form.serum_creatinine)
+    const heightNum = form.height_cm ? Number(form.height_cm) : null
+
+    if (!form.age || isNaN(ageNum) || ageNum < 18 || ageNum > 120) {
       errs.age = 'Yaş 18 – 120 arasında olmalıdır.'
-    if (!form.weight_kg || form.weight_kg < 20 || form.weight_kg > 300)
+    }
+    if (!form.weight_kg || isNaN(weightNum) || weightNum < 20 || weightNum > 300) {
       errs.weight_kg = 'Kilo 20 – 300 kg arasında olmalıdır.'
-    if (form.height_cm && (form.height_cm < 100 || form.height_cm > 250))
+    }
+    if (heightNum !== null && (isNaN(heightNum) || heightNum < 100 || heightNum > 250)) {
       errs.height_cm = 'Boy 100 – 250 cm arasında olmalıdır.'
-    if (!form.serum_creatinine || form.serum_creatinine <= 0 || form.serum_creatinine > 15)
-      errs.serum_creatinine = 'Serum Kreatinin 0 – 15 mg/dL arasında olmalıdır.'
-    if (!form.drug_id) errs.drug_id = 'Lütfen bir ilaç seçiniz.'
+    }
+    if (!form.serum_creatinine || isNaN(creatNum) || creatNum <= 0 || creatNum > 15) {
+      errs.serum_creatinine = 'Serum Kreatinin 0.01 – 15 mg/dL arasında olmalıdır.'
+    }
+    if (!form.drug_id) {
+      errs.drug_id = 'Lütfen bir ilaç seçiniz.'
+    }
     return errs
   }
 
@@ -78,20 +104,10 @@ export default function PatientForm({ onResult }) {
   const errorBorder = 'border-red-500'
   const normalBorder = 'border-gray-300'
 
-  const Field = ({ id, label, children }) => (
-    <div>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
-        {label}
-      </label>
-      {children}
-      {errors[id] && <p className="mt-1 text-xs text-red-500">{errors[id]}</p>}
-    </div>
-  )
-
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Age */}
-      <Field id="age" label="Yaş (yıl) *">
+      <FormField id="age" label="Yaş (yıl) *" error={errors.age}>
         <input
           id="age"
           type="number"
@@ -99,13 +115,13 @@ export default function PatientForm({ onResult }) {
           max={120}
           value={form.age}
           onChange={(e) => handleChange('age', e.target.value)}
-          placeholder="örn: 65"
+          placeholder="örn: 30"
           className={`${inputBase} ${errors.age ? errorBorder : normalBorder}`}
         />
-      </Field>
+      </FormField>
 
       {/* Weight */}
-      <Field id="weight_kg" label="Gerçek Vücut Ağırlığı (kg) *">
+      <FormField id="weight_kg" label="Gerçek Vücut Ağırlığı (kg) *" error={errors.weight_kg}>
         <input
           id="weight_kg"
           type="number"
@@ -117,10 +133,10 @@ export default function PatientForm({ onResult }) {
           placeholder="örn: 72.5"
           className={`${inputBase} ${errors.weight_kg ? errorBorder : normalBorder}`}
         />
-      </Field>
+      </FormField>
 
       {/* Height */}
-      <Field id="height_cm" label="Boy (cm) — Obezite düzeltmesi için">
+      <FormField id="height_cm" label="Boy (cm) — Obezite düzeltmesi için" error={errors.height_cm}>
         <input
           id="height_cm"
           type="number"
@@ -128,13 +144,13 @@ export default function PatientForm({ onResult }) {
           max={250}
           value={form.height_cm}
           onChange={(e) => handleChange('height_cm', e.target.value)}
-          placeholder="örn: 170 (isteğe bağlı)"
+          placeholder="örn: 175 (isteğe bağlı)"
           className={`${inputBase} ${errors.height_cm ? errorBorder : normalBorder}`}
         />
-      </Field>
+      </FormField>
 
       {/* Gender */}
-      <Field id="gender" label="Cinsiyet *">
+      <FormField id="gender" label="Cinsiyet *">
         <select
           id="gender"
           value={form.gender}
@@ -144,10 +160,10 @@ export default function PatientForm({ onResult }) {
           <option value="male">Erkek</option>
           <option value="female">Kadın</option>
         </select>
-      </Field>
+      </FormField>
 
       {/* Serum Creatinine */}
-      <Field id="serum_creatinine" label="Serum Kreatinin (mg/dL) *">
+      <FormField id="serum_creatinine" label="Serum Kreatinin (mg/dL) *" error={errors.serum_creatinine}>
         <input
           id="serum_creatinine"
           type="number"
@@ -156,19 +172,19 @@ export default function PatientForm({ onResult }) {
           max={15}
           value={form.serum_creatinine}
           onChange={(e) => handleChange('serum_creatinine', e.target.value)}
-          placeholder="örn: 1.4"
+          placeholder="örn: 1.2"
           className={`${inputBase} ${errors.serum_creatinine ? errorBorder : normalBorder}`}
         />
-      </Field>
+      </FormField>
 
       {/* Drug Selector */}
-      <Field id="drug_id" label="İlaç Seçimi *">
+      <FormField id="drug_id" label="İlaç Seçimi *" error={errors.drug_id}>
         <DrugSelector
           value={form.drug_id}
           onChange={(val) => handleChange('drug_id', val)}
           error={errors.drug_id}
         />
-      </Field>
+      </FormField>
 
       {/* API Error */}
       {apiError && (
@@ -183,7 +199,7 @@ export default function PatientForm({ onResult }) {
         disabled={isLoading}
         className="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white
           hover:bg-blue-700 active:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed
-          transition-colors shadow-md"
+          transition-colors shadow-md cursor-pointer"
       >
         {isLoading ? (
           <span className="flex items-center justify-center gap-2">

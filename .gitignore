@@ -10,10 +10,12 @@ venv/
 .venv/
 env/
 
+# Database files
+*.db
+*.sqlite3
+
 # Node / React
 node_modules/
 build/
 dist/
 .DS_Store
-
-*.md
